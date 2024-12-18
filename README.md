@@ -12,7 +12,13 @@ Feel free to contribute to it!
 6. [POWER BI](https://taranjyotsingh.atlassian.net/l/cp/PKz7HR2f)
 
 ## Cheat-sheet
-[Quick reference cheat-sheet](https://quickref.me/)
+1. [Quick reference cheat-sheet](https://quickref.me/)
+
+
+
+
+
+
 
 
 **NOTE** - I'll try my best to keep the Confluence pages up to date. If you have any suggestions for the confluence page or feel something needs to be added, please leave comment in the repository.
