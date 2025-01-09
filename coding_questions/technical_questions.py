@@ -385,8 +385,101 @@ else:
     print("No solution found.")
 
 ##################################################################################################################################
+
+'''Write a program that takes an array, Returns the smallest positive integers greater than 0 that does not occur in array.'''
+
+def smallest_missing_positive(arr):
+    # Remove non-positive numbers and duplicates
+    arr = set(filter(lambda x: x > 0, arr))
+    # Start checking from 1
+    smallest = 1
+    while smallest in arr:
+        smallest += 1
+    return smallest
+
+# Example usage
+input_array = [3, 4, -1, 1]
+result = smallest_missing_positive(input_array)
+print(f"The smallest positive integer missing is: {result}")
+
 ##################################################################################################################################
+
+'''The counting game is a widely popular casual game. Every participant in the game must count numbers in sequence. However, If
+number to be called is a multiple of 7, or if the next number contains the digit 7, then that number must be skipped, otherwise,
+you lose the game.
+Rose and Zack play this game and find it too easy, so they decide to modify some rules: for any number containing the digit 7, all
+its multiples cannot be called either! For example, if Rose calls out 6, since 7 cannot be called, Zack must call 8 next. If Rose
+calls out 33, since 34 is 17 times 2 and 35 is 7 times 5, Zack's next possible call is 36. If Rose calls out 69, because numbers 70
+to 79 all contain the digit 7, Zack's next call must be 80.
+Input Format - Input a line which contains a positive integer x, indicating the number called by Rose this time.
+Output Format - Output a lines which contains an integer. If the number called by Rose this time is invalid (cannot be called),
+output -1. Otherwise, output the number that Zack should call next.'''
+
+def next_number_called_by_zack(x):
+    # Helper function to check if a number is invalid
+    def is_invalid(num):
+        return '7' in str(num) or num % 7 == 0 or any(num % i == 0 for i in range(1, num) if '7' in str(i))
+
+    # Check if Rose's number is invalid
+    if is_invalid(x):
+        return -1
+
+    # Find Zack's next valid number
+    current = x + 1
+    while is_invalid(current):
+        current += 1
+
+    return current
+
+# Input
+x = int(input("Enter the number Rose called: "))
+
+# Output
+result = next_number_called_by_zack(x)
+print(result)
+
 ##################################################################################################################################
+
+'''Given a number n (1 «= n «= 10'10), the task is to find all the possible sequences of successive positive integer numbers
+(p. p+1, ... ) satisfy the equation: n = p+2 + (p+1)*2 + ... + (p+m)*2.
+Input - The input consists of a single integer n.
+Output - The output is an array of strings consisting of two parts. The first element should display the total number of possible
+sequences, denoted as k. The following k elements should contain the descriptions of the sequences. Each element is a string starts
+with the count of numbers in the corresponding sequence, denoted as c, followed by e integers representing the successive positive
+integer numbers, separated by a space. These k elements should be ordered in descending order of c.
+Sample Input - 2030
+Sample Output - ["2","4 21 22 23 24","3 25 26 27"]'''
+
+def find_sequences(n):
+    results = []
+    for p in range(1, int(n**0.5) + 1):  # Check possible starting points
+        total = 0
+        sequence = []
+        for m in range(p, int(n**0.5) + 2):  # Extend the sequence
+            total += m * m
+            sequence.append(m)
+            if total == n:
+                results.append(sequence)
+                break
+            elif total > n:
+                break
+
+    # Format output
+    formatted_results = []
+    for seq in results:
+        formatted_results.append(f"{len(seq)} {' '.join(map(str, seq))}")
+
+    # Convert the count of results to string and return
+    return [str(len(results))] + formatted_results
+
+
+# Input
+n = int(input("Enter the value of n: "))
+
+# Output
+output = find_sequences(n)
+print(output)
+
 ##################################################################################################################################
 ##################################################################################################################################
 ##################################################################################################################################
