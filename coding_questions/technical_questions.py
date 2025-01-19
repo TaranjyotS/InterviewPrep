@@ -481,6 +481,354 @@ output = find_sequences(n)
 print(output)
 
 ##################################################################################################################################
+
+'''Write a piApprox(pts) function who will use the points pts to return an approximation of the number float π. Pts is a
+multidimensional list of float.Each item in pts is a point, a point is represented by an array containing exactly 2 numbers,
+respectively x and y, pts is never None and always contain at least one item.'''
+
+def piApprox(pts):
+    inside_circle = 0
+    total_points = len(pts)
+    
+    for point in pts:
+        x, y = point
+        # Check if the point is inside the circle (x^2 + y^2 <= 1)
+        if x**2 + y**2 <= 1:
+            inside_circle += 1
+    
+    # Estimate of π using the formula 4 * (points inside circle / total points)
+    return 4 * (inside_circle / total_points)
+
+pts = [[0.5, 0.5], [0.1, 0.1], [-0.7, 0.7], [0.9, 0.2], [0.5, -0.3]]
+print(piApprox(pts))  # Output will be an approximation of π
+
+##################################################################################################################################
+
+'''Implement function compute(start_node_id, from_ids, to_ids) which should return the last node I'd of the network found when
+starting from the node with id start_node_id and following the links of the network. In case you run into a loop when traversing
+the network, the function should return the id of the last node traversed before closing the loop. The node ids are not necessarily
+ordered. A node will never be directly linked to itself.'''
+
+def compute(start_node_id, from_ids, to_ids):
+    # Create a mapping of from_ids to to_ids for easier traversal
+    links = {}
+    for from_id, to_id in zip(from_ids, to_ids):
+        links[from_id] = to_id
+    
+    visited = set()  # Set to track visited nodes
+    current_node = start_node_id
+    last_visited = None  # To keep track of the last node visited before the loop
+    
+    while current_node in links:  # As long as there's a link to follow
+        if current_node in visited:  # If we've already visited this node, return the last node
+            return last_visited
+        visited.add(current_node)  # Mark this node as visited
+        last_visited = current_node  # Update the last visited node
+        current_node = links[current_node]  # Move to the next node in the network
+    
+    return current_node  # If no loop is found, return the last node
+
+# Example usage:
+from_ids = [11, 7, 10, 9, 8, 4, 1]
+to_ids = [1, 10, 11, 10, 11, 8, 4]
+start_node_id = 9
+print(compute(start_node_id, from_ids, to_ids))  # Expected Output: 8
+
+##################################################################################################################################
+
+'''How we proceed to form duels: select a first player randomly, then select his opponent at random among remaining participants.
+The pair obtained forms one of the duels of tournament. Implement count function to return number if possible pairs. Parameter "n"
+corresponds to number of players. Try to optimize solution so that duration of treatment is same for any "n".
+Note: 2 <= n <= 10000'''
+
+def count(n):
+    # Return the number of duels using the combination formula C(n, 2) = n(n-1) / 2
+    return n * (n - 1) // 2
+
+# Example usage
+n = 10
+print(count(n))  # Output: 45 (since C(10, 2) = 10*9/2 = 45)
+
+##################################################################################################################################
+
+'''You are part of data analytics team for a new app company. User feedback is essential for your company's success, and your task
+is to analyze user reviews to find trends and areas of improvements. Each user review is represented as a dictionary with keys:
+id(unique identifier), rating(integer from 1 to 5), review(string), and date()string in the format "YYYY-MM-DD". Given a list of
+reviews, your task is to,
+1. Calculate the average rating. It should be upto only decimal place only.
+2. Identify the most common words in the reviews. Exclude any punctuation from the reviews and transform all words to lower case
+for consistency.
+3. Find the month with most reviews submitted.
+Note: Consider words to be any sequence characters separated by spaces. You can assume all words in reviews are in lowercase.'''
+
+import string
+
+# Function to analyze reviews
+def analyze_reviews(reviews):
+    # Step 1: Calculate the average rating
+    total_rating = sum(review["rating"] for review in reviews)
+    avg_rating = total_rating / len(reviews) if reviews else 0
+
+    # Step 2: Identify the most common words
+    STOPWORDS = set(["the", "and", "a", "to", "of", "for", "in", "but", "some", "it", "is", "on", "was", "with"])
+    word_count = {}
+    for review in reviews:
+        # Convert to lowercase and remove punctuation
+        words = review["review"].lower().translate(str.maketrans("", "", string.punctuation)).split()
+        for word in words:
+            if word not in STOPWORDS:
+                word_count[word] = word_count.get(word, 0) + 1
+
+    max_word_count = max(word_count.values(), default=0)
+    most_common_words = [word for word, count in word_count.items() if count == max_word_count]
+
+    # Step 3: Find the month with the most reviews
+    monthly_reviews = {}
+    for review in reviews:
+        # Extract the month in "YYYY-MM" format
+        month = review["date"][:7]
+        monthly_reviews[month] = monthly_reviews.get(month, 0) + 1
+
+    max_month_count = max(monthly_reviews.values(), default=0)
+    most_reviews_month = [month for month, count in monthly_reviews.items() if count == max_month_count]
+
+    # Convert months to readable names
+    month_name = {
+        "01": "January", "02": "February", "03": "March", "04": "April", "05": "May",
+        "06": "June", "07": "July", "08": "August", "09": "September", "10": "October",
+        "11": "November", "12": "December"
+    }
+    most_reviews_month_names = [
+        f"{month_name.get(month[-2:], 'Unknown')} {month[:4]}" for month in most_reviews_month
+    ]
+
+    # Return results
+    return {
+        "average_rating": round(avg_rating, 1),
+        "most_common_words": most_common_words,
+        "month_with_most_reviews": most_reviews_month_names
+    }
+
+# Example data
+reviews = [
+    {"id": 1, "rating": 5, "review": "The coffee was fantastic.", "date": "2022-05-01"},
+    {"id": 2, "rating": 4, "review": "Excellent atmosphere. Love the modern design.", "date": "2022-05-15"},
+    {"id": 3, "rating": 3, "review": "The menu was limited.", "date": "2022-05-20"},
+    {"id": 4, "rating": 5, "review": "Highly recommend the caramel latte.", "date": "2022-05-21"},
+    {"id": 5, "rating": 4, "review": "Seating outside is a nice touch.", "date": "2022-06-07"},
+    {"id": 6, "rating": 2, "review": "It's my go-to coffee place!", "date": "2022-06-11"},
+    {"id": 7, "rating": 5, "review": "Menu could use more vegan options.", "date": "2022-06-15"},
+    {"id": 8, "rating": 3, "review": "The pastries are the best.", "date": "2022-06-28"},
+    {"id": 9, "rating": 5, "review": "Great service during the weekend.", "date": "2022-07-05"},
+    {"id": 10, "rating": 4, "review": "Baristas are friendly and skilled.", "date": "2022-07-12"},
+    {"id": 11, "rating": 4, "review": "A bit pricier than other places in the area.", "date": "2022-07-18"},
+    {"id": 12, "rating": 4, "review": "Love their rewards program.", "date": "2022-07-25"},
+]
+
+# Analyze reviews
+result = analyze_reviews(reviews)
+
+# Print results
+print(f"Average Rating: {result['average_rating']}")
+print(f"Most Common Words: {', '.join(result['most_common_words'])}")
+print(f"Month with Most Reviews: {', '.join(result['month_with_most_reviews'])}")
+
+##################################################################################################################################
+
+'''In a school there are "n" students who want to participate in an academic decathlon. The teacher wants to select maximum number
+of students possible. Each student has a certain skill level. For the team to be uniform, it is important that when the skill level
+of its members are arranged in an increasing order, the difference between any two consecutive skill levels is either 0 or 1. Find
+the maximum team size the teacher can form.'''
+
+def findMaxTeamSize(skills):
+    # Step 1: Sort the array
+    for i in range(len(skills)):
+        for j in range(i + 1, len(skills)):
+            if skills[i] > skills[j]:
+                skills[i], skills[j] = skills[j], skills[i]
+
+    # Step 2: Frequency dictionary
+    freq = {}
+    for skill in skills:
+        if skill not in freq:
+            freq[skill] = 0
+        freq[skill] += 1
+
+    # Step 3: Calculate max team size
+    max_team_size = 0
+    for skill in freq:
+        current_team_size = freq[skill]
+        if skill + 1 in freq:
+            current_team_size += freq[skill + 1]
+        max_team_size = max(max_team_size, current_team_size)
+
+    return max_team_size
+
+# Input
+skills = [4, 4, 13, 2, 3]
+print(findMaxTeamSize(skills))  # Output: 3
+
+##################################################################################################################################
+
+'''Find the number of names in the names list for which a given query string is a prefix, but the query string must not match the
+entire name. For example: Names - [John, 10, Johnny, Jo, Jonas], Query - [John], this function should return 1.'''
+
+def findCompletePrefixes(names, queries):
+    # Result array to store counts for each query
+    result = []
+
+    # Iterate through each query
+    for query in queries:
+        count = 0
+        # Check each name for the query prefix
+        for name in names:
+            if name.startswith(query) and len(query) < len(name):
+                count += 1
+        # Append the count for the query
+        result.append(count)
+    
+    return result
+
+# Input Handling
+if __name__ == "__main__":
+    n = int(input().strip())
+    names = []
+    for _ in range(n):
+        names_item = input().strip()
+        names.append(names_item)
+
+    q = int(input().strip())
+    queries = []
+    for _ in range(q):
+        query_item = input().strip()
+        queries.append(query_item)
+
+    # Call the function
+    result = findCompletePrefixes(names, queries)
+
+    # Print the results
+    for res in result:
+        print(res)
+
+##################################################################################################################################
+
+'''Imagine you're building a backend for an e-commerce website. One of the functions in your backend is responsible for updating
+the shopping cart based on user actions. Users can add items to their cart, remove items from the cart, or change the quantity of
+the items they've added. You are provided a function named "update_shopping_cart" which accepts 2 arguments,
+1. cart: A dictionary where the keys are product IDs (str) and the values are the number of that product currently in the cart (int).
+2. action: A dictionary representing the user's action. It has two keys:
+- type: A string that can be either "add", "remove", or "change".
+- product_id: The product ID the action is referring to.
+- quantity (only when the type is "add" or "change"): The quantity to add or the new quantity to set.
+Your task is to modify the "update_shopping_cart" function to handle the user action and return the updated cart correctly.'''
+
+def update_shopping_cart(cart, action):
+    product_id = action.get('product_id')
+    action_type = action.get('type')
+
+    # Ensure product_id and type are provided
+    if not product_id or not action_type:
+        return cart
+
+    # Handle "add" action
+    if action_type == "add":
+        quantity = action.get('quantity', 0)
+        if product_id in cart:
+            cart[product_id] += quantity
+        else:
+            cart[product_id] = quantity
+
+    # Handle "remove" action
+    elif action_type == "remove":
+        if product_id in cart:
+            del cart[product_id]
+
+    # Handle "change" action
+    elif action_type == "change":
+        quantity = action.get('quantity', 0)
+        if product_id in cart and quantity > 0:
+            cart[product_id] = quantity
+        elif product_id in cart and quantity <= 0:
+            del cart[product_id]
+
+    return cart
+
+# Example usage
+cart = {
+    "apple": 2,
+    "banana": 3,
+}
+
+action = {
+    "type": "add",
+    "product_id": "apple",
+    "quantity": 2,
+}
+
+updated_cart = update_shopping_cart(cart, action)
+print(updated_cart)  # Output: {'apple': 4, 'banana': 3}
+
+##################################################################################################################################
+
+'''String s contains numbers 0 o 9, print the count of indexes(i) in string s such that HCF of (s[0], s[1],......s[i] is equal
+to HCF of (s[i+1],.....s[N-1])'''
+
+# Function to calculate HCF using the Euclidean algorithm
+def compute_hcf(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
+
+# Function to count valid indices
+def count_hcf_indices(s):
+    # Convert string to list of integers
+    digits = list(map(int, s))
+    n = len(digits)
+    
+    # Initialize prefix and suffix HCF arrays
+    prefix_hcf = [0] * n
+    suffix_hcf = [0] * n
+    
+    # Calculate prefix HCFs
+    prefix_hcf[0] = digits[0]
+    for i in range(1, n):
+        prefix_hcf[i] = compute_hcf(prefix_hcf[i-1], digits[i])
+    
+    # Calculate suffix HCFs
+    suffix_hcf[n-1] = digits[n-1]
+    for i in range(n-2, -1, -1):
+        suffix_hcf[i] = compute_hcf(suffix_hcf[i+1], digits[i])
+    
+    # Count indices where prefix HCF == suffix HCF
+    count = 0
+    for i in range(n-1):  # Exclude last index
+        if prefix_hcf[i] == suffix_hcf[i+1]:
+            count += 1
+    
+    return count
+
+# Example usage
+s = "4848"
+print(count_hcf_indices(s))  # Output: 2
+
+##################################################################################################################################
+
+'''Implement a function that takes an array of temperature and returned the temperature closest to 0.'''
+
+def closest_to_zero(temperatures):
+    if not temperatures:
+        return None  # Return None if the array is empty
+    
+    # Sort by absolute value and prioritize positive values in case of ties
+    return min(temperatures, key=lambda x: (abs(x), -x))
+
+# Example usage
+temperatures = [-5, -2, -1, 1, 2, 3, -3]
+print(closest_to_zero(temperatures))  # Output: 1
+
+##################################################################################################################################
+##################################################################################################################################
+##################################################################################################################################
 ##################################################################################################################################
 ##################################################################################################################################
 ##################################################################################################################################
