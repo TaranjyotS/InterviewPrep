@@ -1,5 +1,123 @@
 ##################################################################################################################################
 
+'''Check if 2 strings are anagram.'''
+
+def are_anagrams(str1, str2):
+    # Remove whitespace and convert to lowercase for case-insensitive comparison
+    str1 = str1.replace(" ", "").lower()
+    str2 = str2.replace(" ", "").lower()
+
+    # Compare sorted versions of the strings
+    return sorted(str1) == sorted(str2)
+
+# Example usage
+print(are_anagrams("listen", "silent"))  # True
+print(are_anagrams("hello", "world"))    # False
+
+##################################################################################################################################
+
+'''Find the missing number from the list 1,......n.'''
+
+def find_missing_number(nums):
+    # Calculate n based on the length of the list
+    n = len(nums) + 1
+
+    # Calculate the expected sum of numbers from 1 to n
+    expected_sum = n * (n + 1) // 2
+
+    # Calculate the actual sum of the given list
+    actual_sum = sum(nums)
+
+    # The missing number is the difference
+    return expected_sum - actual_sum
+
+# Example usage
+nums = [1, 2, 4, 5, 6]  # Missing number is 3
+print(find_missing_number(nums))  # Output: 3
+
+##################################################################################################################################
+
+'''Check if number is prime number.'''
+
+def is_prime(number):
+    if number <= 1:
+        return False  # Numbers <= 1 are not prime
+    for i in range(2, int(number ** 0.5) + 1):
+        if number % i == 0:
+            return False  # Found a divisor, so it's not prime
+    return True  # No divisors found, it's prime
+
+# Example usage
+print(is_prime(11))  # True
+print(is_prime(15))  # False
+
+##################################################################################################################################
+
+'''Write a function to convert a roman to integer.'''
+
+def roman_to_int(s):
+    # Map of Roman numerals to integers
+    roman_to_int_map = {
+        'I': 1, 'V': 5, 'X': 10,
+        'L': 50, 'C': 100, 'D': 500, 'M': 1000
+    }
+    
+    total = 0  # To store the final integer value
+    prev_value = 0  # To track the previous numeral's value
+    
+    # Iterate through the Roman numeral string in reverse
+    for char in reversed(s):
+        current_value = roman_to_int_map[char]
+        
+        if current_value < prev_value:
+            # Subtract if the current value is smaller than the previous
+            total -= current_value
+        else:
+            # Add if the current value is greater or equal to the previous
+            total += current_value
+        
+        prev_value = current_value  # Update the previous value
+    
+    return total
+
+# Example usage
+print(roman_to_int("III"))     # Output: 3
+print(roman_to_int("IV"))      # Output: 4
+print(roman_to_int("IX"))      # Output: 9
+print(roman_to_int("LVIII"))   # Output: 58
+print(roman_to_int("MCMXCIV")) # Output: 1994
+
+##################################################################################################################################
+
+'''Write a function to find the longest common prefix string amongst an array of strings. If there is no common prefix, return an
+empty string'''
+
+def longest_common_prefix(strs):
+    if not strs:
+        return ""  # Return empty string if the list is empty
+
+    # Start with the first string as the prefix
+    prefix = strs[0]
+
+    # Compare the prefix with each string in the array
+    for string in strs[1:]:
+        # Reduce the prefix until it matches the start of the current string
+        while not string.startswith(prefix):
+            prefix = prefix[:-1]  # Remove the last character from the prefix
+            if not prefix:  # If the prefix becomes empty, return ""
+                return ""
+
+    return prefix
+
+# Example usage
+print(longest_common_prefix(["flower", "flow", "flight"]))  # Output: "fl"
+print(longest_common_prefix(["dog", "racecar", "car"]))     # Output: ""
+print(longest_common_prefix(["interspecies", "interstellar", "interstate"]))  # Output: "inters"
+print(longest_common_prefix([]))                            # Output: ""
+print(longest_common_prefix([""]))                          # Output: ""
+
+##################################################################################################################################
+
 '''Given a string 'st', calculate the occurrence of each character with loop.'''
 
 st = 'abbcccdddd'
@@ -19,6 +137,154 @@ for char in st:
 # Print the occurrence of each character
 for char, count in char_count.items():
     print(f"Character: {char}, Count: {count}")
+
+##################################################################################################################################
+
+'''Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.'''
+
+def is_valid(s):
+    stack = []
+    bracket_map = {')': '(', '}': '{', ']': '['}  # Mapping of closing to opening brackets
+
+    for char in s:
+        if char in bracket_map:  # If it's a closing bracket
+            top_element = stack.pop() if stack else '#'  # Pop if stack is not empty
+            if bracket_map[char] != top_element:  # Check if brackets match
+                return False
+        else:
+            stack.append(char)  # Push opening brackets onto stack
+
+    return not stack  # If stack is empty, it's valid
+
+# Example Test Cases
+print(is_valid("()"))       # True
+print(is_valid("()[]{}"))   # True
+print(is_valid("(]"))       # False
+print(is_valid("([)]"))     # False
+print(is_valid("{[]}"))     # True
+
+##################################################################################################################################
+
+'''Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.'''
+
+def generate_parentheses(n):
+    result = []
+    
+    def backtrack(s, open_count, close_count):
+        # Base case: If we used all n pairs, add to result
+        if len(s) == 2 * n:
+            result.append(s)
+            return
+        
+        # Add an opening bracket if we have available open brackets
+        if open_count < n:
+            backtrack(s + "(", open_count + 1, close_count)
+        
+        # Add a closing bracket if it doesn't exceed open brackets
+        if close_count < open_count:
+            backtrack(s + ")", open_count, close_count + 1)
+
+    backtrack("", 0, 0)  # Start with an empty string
+    return result
+
+# Example Usage
+print(generate_parentheses(3))
+
+##################################################################################################################################
+
+'''You are given the heads of two sorted linked lists list1 and list2. Merge the two lists into one sorted list. The list should
+be made by splicing together the nodes of the first two lists. Return the head of the merged linked list.'''
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def merge_two_lists(list1, list2):
+    dummy = ListNode()  # Dummy node to simplify list creation
+    current = dummy  # Pointer to track merged list
+
+    while list1 and list2:
+        if list1.val < list2.val:
+            current.next = list1
+            list1 = list1.next
+        else:
+            current.next = list2
+            list2 = list2.next
+        current = current.next
+
+    # Attach the remaining nodes
+    current.next = list1 if list1 else list2
+
+    return dummy.next  # Return the merged list, skipping dummy node
+
+# Example Usage
+def print_list(head):
+    while head:
+        print(head.val, end=" -> ")
+        head = head.next
+    print("None")
+
+# Creating two sorted linked lists: 1 -> 2 -> 4 and 1 -> 3 -> 5
+list1 = ListNode(1, ListNode(2, ListNode(4)))
+list2 = ListNode(1, ListNode(3, ListNode(5)))
+
+merged_head = merge_two_lists(list1, list2)
+print_list(merged_head)  # Output: 1 -> 1 -> 2 -> 3 -> 4 -> 5 -> None
+
+##################################################################################################################################
+
+'''Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place such that each unique element appears
+only once. The relative order of the elements should be kept the same. Then return the number of unique elements in nums. Consider
+the number of unique elements of nums to be k, to get accepted, you need to do the following things:
+- Change the array nums such that the first k elements of nums contain the unique elements in the order they were present in nums
+initially.
+= The remaining elements of nums are not important as well as the size of nums.
+= Return k.'''
+
+def remove_duplicates(nums):
+    if not nums:
+        return 0  # Edge case: empty array
+
+    i = 0  # Pointer for unique elements
+
+    for j in range(1, len(nums)):  # Start from second element
+        if nums[j] != nums[i]:  # If a new unique element is found
+            i += 1  # Move the unique pointer
+            nums[i] = nums[j]  # Update array in-place
+
+    return i + 1  # k = number of unique elements
+
+# Example Usage
+nums = [0,0,1,1,1,2,2,3,3,4]
+k = remove_duplicates(nums)
+print("Unique count:", k)  # Output: 5
+print("Modified array:", nums[:k])  # Output: [0, 1, 2, 3, 4]
+
+##################################################################################################################################
+
+'''Given an integer array nums and an integer val, remove all occurrences of val in nums in-place. The order of the elements may be
+changed. Then return the number of elements in nums which are not equal to val. Consider the number of elements in nums which are
+not equal to val be k, to get accepted, you need to do the following things:
+- Change the array nums such that the first k elements of nums contain the elements which are not equal to val.
+- The remaining elements of nums are not important as well as the size of nums.
+- Return k.'''
+
+def remove_element(nums, val):
+    i = 0  # Pointer for valid elements
+
+    for j in range(len(nums)):
+        if nums[j] != val:  # If current element is not val
+            nums[i] = nums[j]  # Move valid element to position i
+            i += 1  # Increment valid count
+
+    return i  # k = number of elements not equal to val
+
+# Example Usage
+nums = [3,2,2,3]
+val = 3
+k = remove_element(nums, val)
+print("Remaining count:", k)  # Output: 2
+print("Modified array:", nums[:k])  # Output: [2, 2]
 
 ##################################################################################################################################
 
@@ -827,7 +1093,85 @@ temperatures = [-5, -2, -1, 1, 2, 3, -3]
 print(closest_to_zero(temperatures))  # Output: 1
 
 ##################################################################################################################################
+
+'''You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps. In how many
+distinct ways can you climb to the top?'''
+
+def climb_stairs_optimized(n):
+    if n <= 1:
+        return 1
+
+    prev1, prev2 = 1, 1  # Base cases
+
+    for _ in range(2, n + 1):
+        curr = prev1 + prev2
+        prev2 = prev1
+        prev1 = curr
+
+    return prev1
+
 ##################################################################################################################################
+
+'''The developers of Amazon are working on a prototype for a simple load-balancing algorithm. There are num_servers servers
+numbered from 0 to num_servers - 1 and the initial number of requests assigned to each server is 0. In the ith second, a request
+comes from IP hash of request[i], and It must be assigned to the server with the minimum number of requests among the servers from
+index 0 to request[i]. For example, if request[i] = 4, the request must be assigned to the server with the minimum number of requests
+amongst the servers with id [0, 1, 2, 3, 4]. If there are multiple servers with the same minimum number of requests, choose the one
+with the minimum id. When a request is assigned to a server, its number of requests increases by 1.
+Given num_servers and the array request, for each request, find the id of the server it is assigned to.
+Example
+Suppose num_servers = 5, n = 5 and request = [3, 2, 3, 2, 4]. The requests are processed as follows:
+-------------------------------------------------------------------------------------------------------------------------------------------
+| Request IP Hash | Server Request Allocation | Assigned to |                                Remarks                                      |
+-------------------------------------------------------------------------------------------------------------------------------------------
+|        3        |       [0, 0, 0, 0, 0]     |      0      |  The request must be assigned to the server with the minimum number of      |
+|                 |                           |             |  requests amongst the first 3 servers. Since all the first three servers    |
+|                 |                           |             |  have 0 requests assigned, it is assigned to the one with the minimum id,   |
+|                 |                           |             |  i.e. the server with id 0.                                                 |
+|        2        |       [1, 0, 0, 0, 0]     |      1      |  The request must be assigned to the server with the minimum number of      |
+|                 |                           |             |  requests amongst the first 2 servers. Since server 1 has 0 requests signed |
+|                 |                           |             |  which is less than server 0 with 1.                                        |
+|        3        |       [1, 1, 0, 0, 0]     |      2      |  Amongst the first 3 servers, the one with the minimum requests is server 2.|
+|        2        |       [1, 1, 1, 0, 0]     |      0      |  Both of the first 2 servers have the same number of requests assigned.     |
+|                 |                           |             |  Hence the request is assigned to server 0 as it has the minimum id.        |
+|        4        |       [2, 1, 1, 0, 0]     |      3      |  The request must be assigned to the server with the minimum number of      |
+|                 |                           |             |  requests amongst the first 4 servers. The server with minimum requests is  |
+|                 |                           |             |  server 3.                                                                  |
+-------------------------------------------------------------------------------------------------------------------------------------------
+'''
+def assign_requests(num_servers, requests):
+    # Array to track the number of requests handled by each server
+    server_counts = [0] * num_servers
+    result = []
+
+    for req in requests:
+        # Find the server with the minimum load in the range [0, req]
+        chosen_server = -1
+        min_load = float('inf')
+
+        # Iterate only up to the range of servers [0, req]
+        for server in range(req + 1):
+            # Choose the server with the smallest load or, in case of a tie, the smallest ID
+            if server_counts[server] < min_load or (
+                server_counts[server] == min_load and server < chosen_server
+            ):
+                min_load = server_counts[server]
+                chosen_server = server
+
+        # Assign the request to the chosen server
+        result.append(chosen_server)
+        server_counts[chosen_server] += 1  # Increment the count for the chosen server
+
+    return result
+
+# Example Input
+num_servers = 5
+requests = [3, 2, 3, 2, 4]
+
+# Function Call
+output = assign_requests(num_servers, requests)
+print(output)  # Expected Output: [0, 1, 2, 0, 3]
+
 ##################################################################################################################################
 ##################################################################################################################################
 ##################################################################################################################################
