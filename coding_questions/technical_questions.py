@@ -1173,7 +1173,112 @@ output = assign_requests(num_servers, requests)
 print(output)  # Expected Output: [0, 1, 2, 0, 3]
 
 ##################################################################################################################################
+
+'''You are developing a basic word processor that includes a reflow and full-justification feature for text. You are given a list
+of strings lines, where each string represents a line of unwrapped text (e.g., sentences or fragments) and an integer max_width
+representing the target width of each output line.
+Your task is to:
+- Reflow the entire input text into a continuous block of words (i.e., flatten all input lines into one word list).
+- Wrap the text so that each output line is no more than max_width characters.
+- Justify the text so that each line has exactly max_width characters:
+- Insert dashes (-) between words to act as spaces.
+- Distribute extra dashes as evenly as possible between words.
+- If the dashes cannot be evenly distributed, add the extra ones to the leftmost gaps.
+- If a line contains only one word, do not pad it with dashes.
+- Return the resulting lines as a list of strings.
+'''
+def word_wrap(words, max_length):
+    result = []
+    current_line = []
+    current_length = 0
+
+    for word in words:
+        if current_length + len(word) + (len(current_line) if current_line else 0) <= max_length:
+            # Add word to current line
+            current_line.append(word)
+            current_length += len(word)
+        else:
+            # Join and store the current line
+            result.append("-".join(current_line))
+            # Start a new line with the current word
+            current_line = [word]
+            current_length = len(word)
+
+    # Add the last line
+    if current_line:
+        result.append("-".join(current_line))
+
+    return result
+
+# Example Usage
+words = ["The", "day", "began", "as", "still", "as", "the", "night", "abruptly", "light", "pierced", "the", "sky"]
+max_length = 13
+wrapped_text = word_wrap(words, max_length)
+for line in wrapped_text:
+    print(line)
+
 ##################################################################################################################################
+
+'''You are building a simple word processor that supports a text reflow feature with full justification. You are given a list of
+strings, where each string represents a line of unwrapped text (i.e., may contain multiple words) and an integer max_width representing
+the maximum number of characters per line.
+Your task is to:
+- Reflow all the lines into a single block of text (i.e., treat all words across all input lines as one continuous stream of text).
+- Format the text so that each output line has exactly max_width characters.
+- If the line is too short (i.e., total characters + minimal spacing between words < max_width), you must distribute extra dashes (-) as
+evenly as possible between the words to pad the line to the correct length.
+- If the padding cannot be evenly distributed, add extra dashes to the leftmost gaps.
+- If a line contains only one word, it should not be padded with extra dashes.
+'''
+from typing import List
+
+def reflow_and_justify(lines: List[str], max_width: int) -> List[str]:
+    # Step 1: Flatten all lines into a single list of words
+    words = " ".join(lines).split()
+    
+    result = []
+    current_line = []
+    current_length = 0
+
+    for word in words:
+        # Check if we can add the word to the current line
+        if current_length + len(word) + len(current_line) <= max_width:
+            current_line.append(word)
+            current_length += len(word)
+        else:
+            # Justify and add the current line to result
+            result.append(justify_line(current_line, max_width))
+            current_line = [word]
+            current_length = len(word)
+    
+    # Justify and add the final line if exists
+    if current_line:
+        result.append(justify_line(current_line, max_width))
+
+    return result
+
+
+def justify_line(words: List[str], max_width: int) -> str:
+    if len(words) == 1:
+        # Single-word line, no justification needed
+        return words[0]
+
+    total_chars = sum(len(word) for word in words)
+    total_spaces = max_width - total_chars
+    num_gaps = len(words) - 1
+
+    # Distribute the spaces as evenly as possible
+    spaces = [total_spaces // num_gaps] * num_gaps
+    for i in range(total_spaces % num_gaps):
+        spaces[i] += 1  # Add the leftover spaces from the left
+
+    # Build the justified line
+    justified = words[0]
+    for i in range(num_gaps):
+        justified += "-" * spaces[i] + words[i + 1]
+
+    return justified
+
 ##################################################################################################################################
 ##################################################################################################################################
 ##################################################################################################################################
