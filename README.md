@@ -1,24 +1,27 @@
-# Preparation Time
-This is an open repository for reference to important links and coding questions tackled during interviews.
+# 📘 InterviewPrep
+
+This repository contains curated notes and documentation for common tech interview topics, synced with Confluence.
 
 Feel free to contribute to it!
 
-## Interview Questions
-1. [PYTHON](https://taranjyotsingh.atlassian.net/l/cp/t9ACYM5y)
-2. [SQL](https://taranjyotsingh.atlassian.net/l/cp/r47DhVmU)
-3. [UNIX](https://taranjyotsingh.atlassian.net/l/cp/WjMfkGZs)
-4. [TABLEAU](https://taranjyotsingh.atlassian.net/l/cp/tf7iQsTT)
-5. [EXCEL](https://taranjyotsingh.atlassian.net/l/cp/xo1YQR6v)
-6. [POWER BI](https://taranjyotsingh.atlassian.net/l/cp/PKz7HR2f)
+## 📂 Docs
+
+1. [PYTHON](docs/python.md)
+2. [SQL](docs/sql.md)
+3. [UNIX](docs/unix.md)
+4. [TABLEAU](docs/tableau.md)
+5. [EXCEL](docs/excel.md)
+6. [POWER BI](docs/power_bi.md)
 
 ## Cheat-sheet
 1. [Quick reference cheat-sheet](https://quickref.me/)
 
+## 📥 Downloadable PDFs
 
+The following PDF resources are available for download:
 
-
-
-
-
-
-**NOTE** - I'll try my best to keep the Confluence pages up to date. If you have any suggestions for the confluence page or feel something needs to be added, please leave comment in the repository.
+- [Java-1 Interview Questions (PDF)](https://github.com/TaranjyotS/InterviewPrep/raw/main/interview_questions/Java-1 Interview Questions.pdf)
+- [Java-2 Interview Questions (PDF)](https://github.com/TaranjyotS/InterviewPrep/raw/main/interview_questions/Java-2 Interview Questions.pdf)
+- [Microservices Interview Questions (PDF)](https://github.com/TaranjyotS/InterviewPrep/raw/main/interview_questions/Microservices Interview Questions.pdf)
+- [Rest Api Interview Questions (PDF)](https://github.com/TaranjyotS/InterviewPrep/raw/main/interview_questions/REST API Interview Questions.pdf)
+- [Spring Boot Interview Questions (PDF)](https://github.com/TaranjyotS/InterviewPrep/raw/main/interview_questions/Spring Boot Interview Questions.pdf)

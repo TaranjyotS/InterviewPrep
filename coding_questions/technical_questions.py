@@ -1280,6 +1280,128 @@ def justify_line(words: List[str], max_width: int) -> str:
     return justified
 
 ##################################################################################################################################
+
+'''Given matrix, an n × n square matrix of integers, define its 0-border as the union of its leftmost and rightmost columns as well
+as its top and bottom rows. If we were to remove the matrix’s 0-border then the 0-border of the resulting matrix can be defined as
+the 1-border of the original matrix. We can continue this way to define the 2-border, 3-border, etc.
+For each k in [0, 1, ..., floor((n - 1) / 2)], your task is to sort the elements in each k-border and place them in clockwise order, starting from the top-left corner.
+'''
+def sort_matrix_borders(matrix):
+    n = len(matrix)
+    
+    def get_k_border(k):
+        values = []
+        # Top row
+        for j in range(k, n-k):
+            values.append(matrix[k][j])
+        # Right column
+        for i in range(k+1, n-k-1):
+            values.append(matrix[i][n-k-1])
+        # Bottom row (if not same as top)
+        if k != n-k-1:
+            for j in range(n-k-1, k-1, -1):
+                values.append(matrix[n-k-1][j])
+        # Left column
+        for i in range(n-k-2, k, -1):
+            values.append(matrix[i][k])
+        return values
+
+    def set_k_border(k, values):
+        idx = 0
+        # Top row
+        for j in range(k, n-k):
+            matrix[k][j] = values[idx]
+            idx += 1
+        # Right column
+        for i in range(k+1, n-k-1):
+            matrix[i][n-k-1] = values[idx]
+            idx += 1
+        # Bottom row (if not same as top)
+        if k != n-k-1:
+            for j in range(n-k-1, k-1, -1):
+                matrix[n-k-1][j] = values[idx]
+                idx += 1
+        # Left column
+        for i in range(n-k-2, k, -1):
+            matrix[i][k] = values[idx]
+            idx += 1
+
+    for k in range((n + 1) // 2):
+        border_values = get_k_border(k)
+        border_values.sort()
+        set_k_border(k, border_values)
+
+    return matrix
+
 ##################################################################################################################################
+
+'''Given a square matrix of 0s and 1s as strings, return the size of the largest plus sign with equal arms made of only 1s. Return
+the size of the arms, not including the center. The center of the plus sign and all arms must be 1s and the arms must extend the
+same number of steps in the up, down, left, and right directions. A single 1 does not count as a plus sign. The size of the matrix
+will not exceed 1000 x 1000.
+'''
+def solution(matrix):
+    n = len(matrix)
+    m = len(matrix[0])
+
+    # Convert each row from string to list of integers
+    grid = [[int(c) for c in row] for row in matrix]
+
+    # Create 2D arrays for all 4 directions
+    up = [[0]*m for _ in range(n)]
+    down = [[0]*m for _ in range(n)]
+    left = [[0]*m for _ in range(n)]
+    right = [[0]*m for _ in range(n)]
+
+    # Fill up and left
+    for i in range(n):
+        for j in range(m):
+            if grid[i][j] == 1:
+                up[i][j] = (up[i-1][j] + 1) if i > 0 else 1
+                left[i][j] = (left[i][j-1] + 1) if j > 0 else 1
+
+    # Fill down and right
+    for i in reversed(range(n)):
+        for j in reversed(range(m)):
+            if grid[i][j] == 1:
+                down[i][j] = (down[i+1][j] + 1) if i < n - 1 else 1
+                right[i][j] = (right[i][j+1] + 1) if j < m - 1 else 1
+
+    # Find the largest plus sign
+    max_k = 0
+    for i in range(n):
+        for j in range(m):
+            if grid[i][j] == 1:
+                k = min(up[i][j], down[i][j], left[i][j], right[i][j])
+                max_k = max(max_k, k)
+
+    # Final size is (k - 1)
+    return max_k - 1
+
 ##################################################################################################################################
+
+'''You are given an array of integers strength, where strength[i] is the strength of the i-th athlete. They will be lined up in a
+row for a relay race. Fatigue is calculated as the maximum absolute difference between the strengths of two adjacent athletes. Return
+the minimum fatigue possible by rearranging the athletes.
+'''
+def minimize_max_adjacent_diff(heights):
+    heights.sort()
+    n = len(heights)
+    arrangement = [0] * n
+    left = (n - 1) // 2
+    right = left + 1
+    toggle = True  # Start from left
+
+    for i in range(n - 1, -1, -1):
+        if toggle:
+            arrangement[left] = heights[i]
+            left -= 1
+        else:
+            arrangement[right] = heights[i]
+            right += 1
+        toggle = not toggle
+
+    max_diff = max(abs(arrangement[i] - arrangement[i + 1]) for i in range(n - 1))
+    return max_diff
+
 ##################################################################################################################################

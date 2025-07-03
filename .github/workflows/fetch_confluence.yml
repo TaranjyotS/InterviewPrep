@@ -1,0 +1,38 @@
+name: Nightly Sync from Confluence
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # every day at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 markdownify
+
+      - name: Fetch Confluence pages
+        env:
+          CONFLUENCE_API_URL: ${{ secrets.CONFLUENCE_API_URL }}
+          CONFLUENCE_USER: ${{ secrets.CONFLUENCE_USER }}
+          CONFLUENCE_TOKEN: ${{ secrets.CONFLUENCE_TOKEN }}
+        run: |
+          python confluence_sync/build_page_map.py
+          python confluence_sync/fetch_from_confluence.py
+
+      - name: Commit & push updated files
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add confluence_sync/page_map.json docs/
+          git diff --cached --quiet || git commit -m "🔄 Auto-sync from Confluence"
+          git push

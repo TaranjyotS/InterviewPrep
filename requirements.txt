@@ -1,0 +1,5 @@
+requests
+markdown
+beautifulsoup4
+markdownify
+python-dotenv

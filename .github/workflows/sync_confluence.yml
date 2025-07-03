@@ -1,0 +1,33 @@
+name: Sync Markdown to Confluence
+
+on:
+  push:
+    paths:
+      - 'docs/*.md'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install markdown requests
+
+      - name: Push changed markdown pages to Confluence
+        env:
+          CONFLUENCE_API_URL: ${{ secrets.CONFLUENCE_API_URL }}
+          CONFLUENCE_USER: ${{ secrets.CONFLUENCE_USER }}
+          CONFLUENCE_TOKEN: ${{ secrets.CONFLUENCE_TOKEN }}
+        run: |
+          changed=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^docs/.*\.md' || true)
+          for file in $changed; do
+            echo "🔼 Updating $file"
+            python confluence_sync/push_to_confluence.py "$file"
+          done
