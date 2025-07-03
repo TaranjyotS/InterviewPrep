@@ -8,6 +8,9 @@ from markdownify import markdownify as md
 CONFLUENCE_API_URL = os.getenv("CONFLUENCE_API_URL")
 CONFLUENCE_USER = os.getenv("CONFLUENCE_USER")
 CONFLUENCE_TOKEN = os.getenv("CONFLUENCE_TOKEN")
+
+IGNORED_TITLES = {"overview", "getting started in confluence"}
+
 OUT_DIR = "docs"
 os.makedirs(OUT_DIR, exist_ok=True)
 
@@ -29,6 +32,9 @@ def export_all():
         page_map = json.load(f)
 
     for title, page_id in page_map.items():
+        if title.strip().lower() in IGNORED_TITLES:
+            print(f"⏭️ Skipping ignored page: {title}")
+            continue
         try:
             clean_title, html = get_page_html(page_id)
             markdown = convert_html_to_md(html)

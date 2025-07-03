@@ -7,6 +7,8 @@ CONFLUENCE_API_URL = os.getenv("CONFLUENCE_API_URL")
 CONFLUENCE_USER = os.getenv("CONFLUENCE_USER")
 CONFLUENCE_TOKEN = os.getenv("CONFLUENCE_TOKEN")
 
+IGNORED_TITLES = {"overview", "getting started in confluence"}
+
 def fetch_personal_space_key():
     url = f"{CONFLUENCE_API_URL}/space"
     res = requests.get(url, auth=(CONFLUENCE_USER, CONFLUENCE_TOKEN))
@@ -28,7 +30,14 @@ def fetch_all_pages(space_key):
         res = requests.get(url, auth=(CONFLUENCE_USER, CONFLUENCE_TOKEN), params=params)
         res.raise_for_status()
         data = res.json()
-        pages += [(p["title"], p["id"]) for p in data["results"]]
+
+        for page in data["results"]:
+            title = page["title"].strip().lower()
+            if title in IGNORED_TITLES:
+                print(f"⏭️ Skipping ignored page: {page['title']}")
+                continue
+            pages.append((page["title"], page["id"]))
+
         if len(data["results"]) < limit:
             break
         start += limit
