@@ -4,13 +4,17 @@ on:
   push:
     paths:
       - 'docs/*.md'
+  workflow_dispatch:  
 
 jobs:
   sync:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo with write access
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -31,3 +35,14 @@ jobs:
             echo "🔼 Updating $file"
             python confluence_sync/push_to_confluence.py "$file"
           done
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push README or PDF link updates
+        run: |
+          git add README.md
+          git diff --cached --quiet || git commit -m "🔄 Auto-sync from Confluence"
+          git push
