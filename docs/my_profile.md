@@ -1,3 +1,5 @@
+# My Profile
+
 ### **Introduction:**
 
 Hi, I’m Taranjyot Singh, an experienced Software Development Engineer with 4+ years of hands-on experience in Python development, backend systems, and full-stack web development. Proven track record of building scalable, production-grade applications leveraging cloud platforms (AWS, Azure), Kubernetes, and CI/CD automation with Jenkins. Proficient in design patterns, software architecture, functional programming paradigms, and financial data applications. Demonstrates a passion for innovation, continuous learning, and delivering high-impact solutions in fast-paced, agile environments.
