@@ -1405,3 +1405,35 @@ def minimize_max_adjacent_diff(heights):
     return max_diff
 
 ##################################################################################################################################
+
+'''Implement a function in python that takes an input parameter as a string and returns a string such that if you give the input
+as: "aaaaabbbccccaaddd", then the output should be: "a5b3c4a2d3". If you give the input as: "", the output should be "". If you
+give the input as "abc", the output should be "a1b1c1"
+'''
+
+def cal_length(s:str) -> str:
+    if not s:
+        return ""
+    
+    result = []
+    count = 1
+
+    for i in range(1, len(s)):
+        if s[i] == s[i-1]:
+            count += 1
+        else:
+            result.append(f'{s[i-1]}{count}')
+            count = 1
+
+    result.append(f'{s[-1]}{count}')
+
+    return ''.join(result)
+
+output = cal_length('aaaaabbbccccaaddd')
+print(output)
+
+##################################################################################################################################
+##################################################################################################################################
+##################################################################################################################################
+##################################################################################################################################
+##################################################################################################################################

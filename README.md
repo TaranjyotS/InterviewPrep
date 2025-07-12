@@ -13,8 +13,10 @@ Feel free to contribute to it!
 5. [EXCEL](docs/excel.md)
 6. [POWER BI](docs/power_bi.md)
 
-## 📝 Cheat-sheet
+## 📝 Important Links
 1. [Quick reference cheat-sheet](https://quickref.me/)
+2. [Python Interview questions with Answers](https://pythonguides.com/python-interview-questions-and-answers/)
+3. [InterviewBit-All Languages and Tools](https://www.interviewbit.com/technical-interview-questions/)
 
 ## 📥 Downloadable PDFs
 
