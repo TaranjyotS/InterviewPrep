@@ -17,6 +17,10 @@ Feel free to contribute to it!
 1. [Quick reference cheat-sheet](https://quickref.me/)
 2. [Python Interview questions with Answers](https://pythonguides.com/python-interview-questions-and-answers/)
 3. [InterviewBit-All Languages and Tools](https://www.interviewbit.com/technical-interview-questions/)
+4. [Docker, Kubernetes, Jenkins, Git](https://www.baeldung.com/ops/)
+5. [Design Patterns](https://refactoring.guru/design-patterns)
+6. [SpringBoot for RESTful Web Service](https://spring.io/guides/gs/rest-service)
+7. [System Design and Architecture](https://github.com/coding-parrot/system_design?tab=readme-ov-file)
 
 ## 📥 Downloadable PDFs
 
